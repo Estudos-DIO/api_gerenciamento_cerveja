@@ -60,13 +60,13 @@ public class CervejaControllerTest {
         // when
         Mockito.when( cervejaService.criarCerveja( cervejaDTO ) ).thenReturn( cervejaDTO );
 
-        mockMvc.perform( post( "API_URL_PATH" )
+        mockMvc.perform( post( API_URL_PATH )
             .contentType( MediaType.APPLICATION_JSON )
             .content( asJsonString(cervejaDTO)))
                 .andExpect( status().isCreated() )
                 .andExpect(jsonPath( "$.nome", is( cervejaDTO.getNome() ) ))
                 .andExpect(jsonPath( "$.marca", is( cervejaDTO.getMarca() ) ))
-                .andExpect(jsonPath( "$.tipo", is( cervejaDTO.getTipo().getDescricao() ) ));
+                .andExpect(jsonPath( "$.tipo", is( cervejaDTO.getTipo().getDescricao().toUpperCase() ) ));
     }
     //----------------------------------------------------------------------------------------------------
 
