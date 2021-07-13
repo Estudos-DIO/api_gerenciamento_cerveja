@@ -6,8 +6,6 @@ import estoque.cerveja.entity.Cerveja;
 import estoque.cerveja.exception.ExcecaoCervejaJaRegistrada;
 import estoque.cerveja.mapper.CervejaMapper;
 import estoque.cerveja.repository.CervejaRepository;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -100,7 +98,6 @@ public class CervejaServiceTest {
 
         // then
         assertThrows( ExcecaoCervejaJaRegistrada.class, () -> servicoCerveja.criarCerveja( cervejaDTO ) );
-
     }
     //----------------------------------------------------------------------------------------------------
 
