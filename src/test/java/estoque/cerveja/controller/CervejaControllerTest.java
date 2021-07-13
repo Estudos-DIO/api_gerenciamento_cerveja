@@ -69,7 +69,19 @@ public class CervejaControllerTest {
                 .andExpect(jsonPath( "$.tipo", is( cervejaDTO.getTipo().getDescricao().toUpperCase() ) ));
     }
     //----------------------------------------------------------------------------------------------------
+    @Test
+    void quandoChamarPOSTSemInformarCampoObrigatorio() throws Exception {
 
+        // dados de entrda
+        CervejaDTO cervejaDTO = CervejaDTOBuilder.builder().build().paraCervejaDTO();
+        cervejaDTO.setMarca(null);
+
+        // then
+        mockMvc.perform(post( API_URL_PATH )
+                .contentType( MediaType.APPLICATION_JSON )
+                .content( asJsonString( cervejaDTO) ) )
+                .andExpect( status().isBadRequest() );
+    }
     //----------------------------------------------------------------------------------------------------
 
 } // fim de CervejaControllerTest{...}
