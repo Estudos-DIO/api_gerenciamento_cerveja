@@ -21,6 +21,7 @@ public class CervejaService {
 
     private final CervejaRepository repositorioCerveja;
     private final CervejaMapper mapperCerveja = CervejaMapper.INSTANCIA;
+    //private final CervejaMapper mapperCerveja;
 
     public CervejaDTO criarCerveja( CervejaDTO cervejaDTO ) throws ExcecaoCervejaJaRegistrada {
         verificarSeFoiRegistrada( cervejaDTO.getNome() );

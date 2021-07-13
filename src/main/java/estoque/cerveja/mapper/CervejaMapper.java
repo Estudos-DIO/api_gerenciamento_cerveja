@@ -5,7 +5,7 @@ import estoque.cerveja.entity.Cerveja;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CervejaMapper {
 
     CervejaMapper INSTANCIA = Mappers.getMapper( CervejaMapper.class );
