@@ -19,6 +19,7 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 // utiliza a extensão do Mockito para executar a classe de teste.
@@ -86,7 +87,21 @@ public class CervejaServiceTest {
         assertThat( criarCervejaDTO.getQuantidade(), is( greaterThan( 2 ) )  );
     }
     //----------------------------------------------------------------------------------------------------
-    
+    @Test
+    void quandoCervejaCriadaEhInformadaELancaExcecao() throws ExcecaoCervejaJaRegistrada {
+
+        // instanciar os objetos
+        CervejaDTO cervejaDTO = CervejaDTOBuilder.builder().build().paraCervejaDTO();
+        Cerveja cervejaDuplicada = mapperCerveja.paraModelo( cervejaDTO );
+
+        // when
+        when( repositorioCeveja.findByNome( cervejaDTO.getNome() ) )
+                .thenReturn( Optional.of( cervejaDuplicada ) );
+
+        // then
+        assertThrows( ExcecaoCervejaJaRegistrada.class, () -> servicoCerveja.criarCerveja( cervejaDTO ) );
+
+    }
     //----------------------------------------------------------------------------------------------------
 
 } // fim de CervejaServiceTest{...}
