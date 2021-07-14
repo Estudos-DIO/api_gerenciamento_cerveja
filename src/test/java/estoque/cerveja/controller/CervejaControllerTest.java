@@ -104,5 +104,20 @@ public class CervejaControllerTest {
 
     }
     //----------------------------------------------------------------------------------------------------
+    @Test
+    void quandoChamaNomeCervejaValidoRetornaStatusNotFound( ) throws Exception {
+
+        // dados de entrada
+        CervejaDTO cervejaDTO = CervejaDTOBuilder.builder().build().paraCervejaDTO();
+
+        // when
+        when( cervejaService.pesquisarPorNome( cervejaDTO.getNome() )).thenThrow( ExcecaoCervejaNaoEncontrada.class );
+
+        mockMvc.perform(MockMvcRequestBuilders.get(API_URL_PATH + "/" + cervejaDTO.getNome())
+                .contentType( MediaType.APPLICATION_JSON ))
+                .andExpect( status().isNotFound() );
+    }
+    //----------------------------------------------------------------------------------------------------
+
 
 } // fim de CervejaControllerTest{...}
