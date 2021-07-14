@@ -4,6 +4,7 @@ import estoque.cerveja.builder.CervejaDTOBuilder;
 import estoque.cerveja.dto.CervejaDTO;
 import estoque.cerveja.entity.Cerveja;
 import estoque.cerveja.exception.ExcecaoCervejaJaRegistrada;
+import estoque.cerveja.exception.ExcecaoCervejaNaoEncontrada;
 import estoque.cerveja.mapper.CervejaMapper;
 import estoque.cerveja.repository.CervejaRepository;
 import org.junit.jupiter.api.Test;
@@ -99,6 +100,42 @@ public class CervejaServiceTest {
         // then
         assertThrows( ExcecaoCervejaJaRegistrada.class, () -> servicoCerveja.criarCerveja( cervejaDTO ) );
     }
+    //----------------------------------------------------------------------------------------------------
+    @Test
+    void quandoONomeDaCevejaEhDadoRetornaOsDados() throws ExcecaoCervejaNaoEncontrada {
+
+        // instanciar os objetos
+        CervejaDTO cervejaDTOEsperada = CervejaDTOBuilder.builder().build().paraCervejaDTO();
+        Cerveja cervejaEsperada = mapperCerveja.paraModelo( cervejaDTOEsperada );
+
+        // when
+        when( repositorioCeveja.findByNome( cervejaDTOEsperada.getNome() ) )
+                .thenReturn( Optional.of( cervejaEsperada ) );
+
+        // then
+        assertThrows( ExcecaoCervejaJaRegistrada.class, () -> servicoCerveja.criarCerveja( cervejaDTOEsperada ) );
+
+        CervejaDTO cervejaDTO_encontrada = servicoCerveja.pesquisarPorNome( cervejaDTOEsperada.getNome() );
+
+        assertThat( cervejaDTO_encontrada, is( equalTo( cervejaDTOEsperada ) ) );
+    }
+    //----------------------------------------------------------------------------------------------------
+    @Test
+    void quandoONomeDaCevejaEhNaoRegistradoLancaExcecao() throws ExcecaoCervejaNaoEncontrada {
+
+        // instanciar os objetos
+        CervejaDTO cervejaDTOEsperada = CervejaDTOBuilder.builder().build().paraCervejaDTO();
+
+        // when
+        when( repositorioCeveja.findByNome( cervejaDTOEsperada.getNome() ) )
+                .thenReturn( Optional.empty() );
+
+        // then
+        assertThrows( ExcecaoCervejaNaoEncontrada.class,
+                () -> servicoCerveja.pesquisarPorNome( cervejaDTOEsperada.getNome() ) );
+    }
+    //----------------------------------------------------------------------------------------------------
+
     //----------------------------------------------------------------------------------------------------
 
 } // fim de CervejaServiceTest{...}

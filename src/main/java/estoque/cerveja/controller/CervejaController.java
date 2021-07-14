@@ -27,7 +27,7 @@ public class CervejaController {
         return servicoCerveja.criarCerveja( cervejaDTO );
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/{nome}")
     public CervejaDTO findByName( @PathVariable String nome ) throws ExcecaoCervejaNaoEncontrada {
         return servicoCerveja.pesquisarPorNome( nome );
     }
@@ -43,7 +43,7 @@ public class CervejaController {
         servicoCerveja.removerPorID( id );
     }
 
-    @PatchMapping("/{id}/increment")
+    @PatchMapping("/{id}/incremento")
     public CervejaDTO increment(@PathVariable Long id, @RequestBody @Valid QuantidadeDTO quantidadeDTO) throws ExcecaoCervejaNaoEncontrada, ExcecaoEstoqueCervejaExcedido {
         return servicoCerveja.incrementar( id, quantidadeDTO.getQuantidade() );
     }
