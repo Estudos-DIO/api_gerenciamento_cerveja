@@ -154,5 +154,18 @@ public class CervejaServiceTest {
         assertThat( listCervejasDTO.get(0), is( equalTo( cervejaDTOEsperada ) ) );
     }
     //----------------------------------------------------------------------------------------------------
+    @Test
+    void quandoListaCervaEhChamadaERetornaListaVazia() {
+
+        // when
+        when( repositorioCeveja.findAll() ).thenReturn( Collections.emptyList() );
+
+        // then
+        List<CervejaDTO> listCervejasDTO = servicoCerveja.listarTodas();
+
+        assertThat( listCervejasDTO, is( empty() ) );
+    }
+    //----------------------------------------------------------------------------------------------------
+
 
 } // fim de CervejaServiceTest{...}
