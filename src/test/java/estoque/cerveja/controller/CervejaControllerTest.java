@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import java.util.Collections;
+
 import static estoque.cerveja.utils.JsonConvertionUtils.asJsonString;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
@@ -117,6 +119,26 @@ public class CervejaControllerTest {
                 .contentType( MediaType.APPLICATION_JSON ))
                 .andExpect( status().isNotFound() );
     }
+    //----------------------------------------------------------------------------------------------------
+    @Test
+    void quandoChamaListaCervejasRetornaALista( ) throws Exception {
+
+        // dados de entrada
+        CervejaDTO cervejaDTO = CervejaDTOBuilder.builder().build().paraCervejaDTO();
+
+        // when
+        when( cervejaService.listarTodas()).thenReturn( Collections.singletonList(cervejaDTO) );
+
+        mockMvc.perform(MockMvcRequestBuilders.get(API_URL_PATH)
+                .contentType( MediaType.APPLICATION_JSON ))
+                .andExpect( status().isOk() )
+                .andExpect(jsonPath( "$[0].nome", is( cervejaDTO.getNome() ) ))
+                .andExpect(jsonPath( "$[0].marca", is( cervejaDTO.getMarca() ) ))
+                .andExpect(jsonPath( "$[0].tipo", is( cervejaDTO.getTipo().getDescricao().toUpperCase() ) ));
+
+    }
+    //----------------------------------------------------------------------------------------------------
+
     //----------------------------------------------------------------------------------------------------
 
 
