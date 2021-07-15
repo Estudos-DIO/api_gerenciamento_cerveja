@@ -156,6 +156,18 @@ public class CervejaControllerTest {
 
     }
     //----------------------------------------------------------------------------------------------------
+    @Test
+    void quandoMetodoExcluirEhChamadoParaIDInvalidoERetornaStatusNotFound() throws Exception {
 
+        // when
+        doNothing().when( cervejaService ).removerPorID( ID_INVALIDO_CERVEJA );
+
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.delete(API_URL_PATH + "/" + ID_INVALIDO_CERVEJA )
+                .contentType( MediaType.APPLICATION_JSON ))
+                .andExpect( status().isNotFound() );
+
+    }
+    //----------------------------------------------------------------------------------------------------
 
 } // fim de CervejaControllerTest{...}
