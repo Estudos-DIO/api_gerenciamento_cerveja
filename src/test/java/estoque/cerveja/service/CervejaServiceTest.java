@@ -21,7 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 // utiliza a extensão do Mockito para executar a classe de teste.
 @ExtendWith(MockitoExtension.class)
@@ -166,6 +166,24 @@ public class CervejaServiceTest {
         assertThat( listCervejasDTO, is( empty() ) );
     }
     //----------------------------------------------------------------------------------------------------
+    @Test
+    void quandoMetodoExcluirEhChamadoEACervejaRemovida() throws ExcecaoCervejaNaoEncontrada {
 
+        // instanciar os objetos
+        CervejaDTO cervejaDTOEsperada = CervejaDTOBuilder.builder().build().paraCervejaDTO();
+        Cerveja cervejaDeletada = mapperCerveja.paraModelo( cervejaDTOEsperada );
+
+        when( repositorioCeveja.findById( cervejaDTOEsperada.getId() ) )
+                .thenReturn( Optional.of( cervejaDeletada ) );
+
+        doNothing().when( repositorioCeveja ).deleteById( cervejaDTOEsperada.getId() );
+
+        // then
+        servicoCerveja.removerPorID( cervejaDTOEsperada.getId() );
+
+        verify( repositorioCeveja, times( 1 ) ).findById( cervejaDTOEsperada.getId() );
+        verify( repositorioCeveja, times( 1 ) ).deleteById( cervejaDTOEsperada.getId() );
+    }
+    //----------------------------------------------------------------------------------------------------
 
 } // fim de CervejaServiceTest{...}
