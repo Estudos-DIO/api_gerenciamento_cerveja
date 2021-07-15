@@ -2,7 +2,6 @@ package estoque.cerveja.controller;
 
 import estoque.cerveja.builder.CervejaDTOBuilder;
 import estoque.cerveja.dto.CervejaDTO;
-import estoque.cerveja.entity.Cerveja;
 import estoque.cerveja.exception.ExcecaoCervejaNaoEncontrada;
 import estoque.cerveja.service.CervejaService;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
@@ -20,12 +18,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.util.Collections;
-import java.util.Optional;
 
 import static estoque.cerveja.utils.JsonConvertionUtils.asJsonString;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -160,7 +156,8 @@ public class CervejaControllerTest {
     void quandoMetodoExcluirEhChamadoParaIDInvalidoERetornaStatusNotFound() throws Exception {
 
         // when
-        doNothing().when( cervejaService ).removerPorID( ID_INVALIDO_CERVEJA );
+        doThrow( ExcecaoCervejaNaoEncontrada.class ).when( cervejaService )
+                .removerPorID( ID_INVALIDO_CERVEJA );
 
         // then
         mockMvc.perform(MockMvcRequestBuilders.delete(API_URL_PATH + "/" + ID_INVALIDO_CERVEJA )
