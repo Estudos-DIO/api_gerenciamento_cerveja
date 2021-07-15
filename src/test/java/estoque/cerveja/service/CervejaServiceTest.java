@@ -5,6 +5,7 @@ import estoque.cerveja.dto.CervejaDTO;
 import estoque.cerveja.entity.Cerveja;
 import estoque.cerveja.exception.ExcecaoCervejaJaRegistrada;
 import estoque.cerveja.exception.ExcecaoCervejaNaoEncontrada;
+import estoque.cerveja.exception.ExcecaoEstoqueCervejaExcedido;
 import estoque.cerveja.mapper.CervejaMapper;
 import estoque.cerveja.repository.CervejaRepository;
 import org.junit.jupiter.api.Test;
@@ -185,5 +186,30 @@ public class CervejaServiceTest {
         verify( repositorioCeveja, times( 1 ) ).deleteById( cervejaDTOEsperada.getId() );
     }
     //----------------------------------------------------------------------------------------------------
+    @Test
+    void quandoChamaIncrementoParaAlterarEstoque() throws ExcecaoCervejaNaoEncontrada,
+            ExcecaoEstoqueCervejaExcedido {
+
+        // dados
+        CervejaDTO cervejaDTOEsperada = CervejaDTOBuilder.builder().build().paraCervejaDTO();
+        Cerveja cervejaEseprada = mapperCerveja.paraModelo( cervejaDTOEsperada );
+
+        // when
+        when( repositorioCeveja.findById( cervejaDTOEsperada.getId() ))
+                .thenReturn(Optional.of( cervejaEseprada ));
+
+        when( repositorioCeveja.save( cervejaEseprada )).thenReturn( cervejaEseprada );
+
+        int qtdParaIncrementar = 10;
+        int qtdAposIncrementado = cervejaDTOEsperada.getQuantidade() + qtdParaIncrementar;
+
+        // then
+        CervejaDTO incrementedBeerDTO = servicoCerveja.incrementar( cervejaDTOEsperada.getId(), qtdParaIncrementar );
+
+        assertThat(qtdAposIncrementado, equalTo( incrementedBeerDTO.getQuantidade() ));
+        assertThat(qtdAposIncrementado, lessThan( cervejaDTOEsperada.getMaximo()) );
+    }
+    //----------------------------------------------------------------------------------------------------
+
 
 } // fim de CervejaServiceTest{...}
