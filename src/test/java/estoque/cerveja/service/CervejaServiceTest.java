@@ -206,10 +206,24 @@ public class CervejaServiceTest {
         // then
         CervejaDTO incrementedBeerDTO = servicoCerveja.incrementar( cervejaDTOEsperada.getId(), qtdParaIncrementar );
 
-        assertThat(qtdAposIncrementado, equalTo( incrementedBeerDTO.getQuantidade() ));
-        assertThat(qtdAposIncrementado, lessThan( cervejaDTOEsperada.getMaximo()) );
+        assertThat( qtdAposIncrementado, equalTo( incrementedBeerDTO.getQuantidade() ) );
+        assertThat( qtdAposIncrementado, lessThan( cervejaDTOEsperada.getMaximo() ) );
     }
     //----------------------------------------------------------------------------------------------------
+    @Test
+    void quandoValorIncrementadoMaiorQueMaximoLancaExcecao() {
 
+        // dados de entrada
+        CervejaDTO cervejaDTOEsperada = CervejaDTOBuilder.builder().build().paraCervejaDTO();
+        Cerveja cervejaEseprada = mapperCerveja.paraModelo( cervejaDTOEsperada );
+
+        when( repositorioCeveja.findById( cervejaDTOEsperada.getId() ))
+                .thenReturn( Optional.of( cervejaEseprada ) );
+
+        int quantityToIncrement = 80;
+        assertThrows( ExcecaoEstoqueCervejaExcedido.class,
+                () -> servicoCerveja.incrementar( cervejaDTOEsperada.getId(), quantityToIncrement));
+    }
+    //----------------------------------------------------------------------------------------------------
 
 } // fim de CervejaServiceTest{...}
