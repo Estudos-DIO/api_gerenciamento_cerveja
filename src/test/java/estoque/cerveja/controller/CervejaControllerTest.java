@@ -2,6 +2,7 @@ package estoque.cerveja.controller;
 
 import estoque.cerveja.builder.CervejaDTOBuilder;
 import estoque.cerveja.dto.CervejaDTO;
+import estoque.cerveja.dto.QuantidadeDTO;
 import estoque.cerveja.exception.ExcecaoCervejaNaoEncontrada;
 import estoque.cerveja.service.CervejaService;
 import org.junit.jupiter.api.BeforeEach;
@@ -164,6 +165,28 @@ public class CervejaControllerTest {
                 .contentType( MediaType.APPLICATION_JSON ))
                 .andExpect( status().isNotFound() );
 
+    }
+    //----------------------------------------------------------------------------------------------------
+    @Test
+    void quandoChamaIncrementoERetornaStatusOK() throws Exception {
+
+        QuantidadeDTO quantidadeDTO = QuantidadeDTO.builder()
+                .quantidade( 20 )
+                .build();
+
+        CervejaDTO cervejaDTO = CervejaDTOBuilder.builder().build().paraCervejaDTO();
+        cervejaDTO.setQuantidade( cervejaDTO.getQuantidade() + quantidadeDTO.getQuantidade() );
+
+        when( cervejaService.incrementar( ID_INVALIDO_CERVEJA, quantidadeDTO.getQuantidade() ) )
+                .thenReturn( cervejaDTO );
+
+        mockMvc.perform (MockMvcRequestBuilders.patch(API_URL_PATH + "/" + ID_INVALIDO_CERVEJA + URL_API_INCREMENTO )
+                .contentType( MediaType.APPLICATION_JSON )
+                .content( asJsonString(quantidadeDTO) ) ).andExpect( status().isOk() )
+                .andExpect( jsonPath("$.nome", is( cervejaDTO.getNome() )) )
+                .andExpect( jsonPath("$.marca", is( cervejaDTO.getMarca() )) )
+                .andExpect( jsonPath("$.tipo", is( cervejaDTO.getTipo().toString() )) )
+                .andExpect( jsonPath("$.quantidade", is( cervejaDTO.getQuantidade() )) );
     }
     //----------------------------------------------------------------------------------------------------
 
