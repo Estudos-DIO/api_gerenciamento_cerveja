@@ -20,10 +20,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static estoque.cerveja.utils.JsonConvertionUtils.asJsonString;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -138,7 +140,21 @@ public class CervejaControllerTest {
 
     }
     //----------------------------------------------------------------------------------------------------
+    @Test
+    void quandoMetodoExcluirEhChamadoParaIDValidoERetornaStatusNoContent() throws Exception {
 
+        // dados de entrada
+        CervejaDTO cervejaDTO = CervejaDTOBuilder.builder().build().paraCervejaDTO();
+
+        // when
+        doNothing().when( cervejaService ).removerPorID( cervejaDTO.getId() );
+
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.delete(API_URL_PATH + "/" + cervejaDTO.getId() )
+                .contentType( MediaType.APPLICATION_JSON ))
+                .andExpect( status().isNoContent() );
+
+    }
     //----------------------------------------------------------------------------------------------------
 
 

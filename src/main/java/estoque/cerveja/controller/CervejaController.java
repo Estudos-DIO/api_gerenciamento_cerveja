@@ -28,12 +28,12 @@ public class CervejaController {
     }
 
     @GetMapping("/{nome}")
-    public CervejaDTO findByName( @PathVariable String nome ) throws ExcecaoCervejaNaoEncontrada {
+    public CervejaDTO procurarPorNome( @PathVariable String nome ) throws ExcecaoCervejaNaoEncontrada {
         return servicoCerveja.pesquisarPorNome( nome );
     }
 
     @GetMapping
-    public List<CervejaDTO> listBeers() {
+    public List<CervejaDTO> listarTodos() {
         return servicoCerveja.listarTodas();
     }
 

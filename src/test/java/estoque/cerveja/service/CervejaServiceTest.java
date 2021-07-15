@@ -167,7 +167,7 @@ public class CervejaServiceTest {
     }
     //----------------------------------------------------------------------------------------------------
     @Test
-    void quandoMetodoExcluirEhChamadoEACervejaRemovida() throws ExcecaoCervejaNaoEncontrada {
+    void quandoMetodoExcluirEhChamadoEDadoCervejaRemovido() throws ExcecaoCervejaNaoEncontrada {
 
         // instanciar os objetos
         CervejaDTO cervejaDTOEsperada = CervejaDTOBuilder.builder().build().paraCervejaDTO();
@@ -185,5 +185,8 @@ public class CervejaServiceTest {
         verify( repositorioCeveja, times( 1 ) ).deleteById( cervejaDTOEsperada.getId() );
     }
     //----------------------------------------------------------------------------------------------------
+
+    //----------------------------------------------------------------------------------------------------
+
 
 } // fim de CervejaServiceTest{...}
