@@ -211,7 +211,7 @@ public class CervejaServiceTest {
     }
     //----------------------------------------------------------------------------------------------------
     @Test
-    void quandoValorIncrementadoMaiorQueMaximoLancaExcecao() {
+    void quandoValorIncrementadoMaiorQueMaximoPermitidoLancaExcecao() {
 
         // dados de entrada
         CervejaDTO cervejaDTOEsperada = CervejaDTOBuilder.builder().build().paraCervejaDTO();
@@ -223,6 +223,17 @@ public class CervejaServiceTest {
         int quantityToIncrement = 80;
         assertThrows( ExcecaoEstoqueCervejaExcedido.class,
                 () -> servicoCerveja.incrementar( cervejaDTOEsperada.getId(), quantityToIncrement));
+    }
+    //----------------------------------------------------------------------------------------------------
+    @Test
+    void quandoValorIncrementoEFeitoParaIDInvalidoLancaExcecao() {
+
+        int qtdParaIncrementar = 20;
+
+        when( repositorioCeveja.findById( ID_CEVEJA_INVALIDO )).thenReturn( Optional.empty() );
+
+        assertThrows( ExcecaoCervejaNaoEncontrada.class,
+                () -> servicoCerveja.incrementar( ID_CEVEJA_INVALIDO, qtdParaIncrementar ));
     }
     //----------------------------------------------------------------------------------------------------
 
